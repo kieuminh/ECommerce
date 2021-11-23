@@ -7,8 +7,10 @@ import Image from 'next/image';
 import { Grid, Link, TableContainer, Typography, Table, TableHead, Card, List,
     Button, TableRow, TableCell, TableBody, Select, MenuItem, ListItem   } from '@material-ui/core';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 function CartScreen() {
+    const router = useRouter();
     // eslint-disable-next-line no-undef
     const { state, dispatch } = useContext(Store);
     const { cart: { cartItems } } = state;
@@ -23,6 +25,9 @@ function CartScreen() {
     const removeItemHandler = (item) => {
          dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
     };
+    const checkoutHandler = () => {
+        router.push('/shipping');
+    }
     return (
         <Layout title="Shopping Cart">
             <Typography component="h1" variant="h1">Shopping Cart</Typography>
@@ -96,7 +101,9 @@ function CartScreen() {
                                     </Typography>
                                 </ListItem>
                                 <ListItem>
-                                    <Button variant="contained" color="primary">
+                                    <Button variant="contained" color="primary"
+                                        onClick={checkoutHandler}    
+                                    >
                                         Check Out
                                     </Button>
                                 </ListItem>
