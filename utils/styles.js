@@ -30,6 +30,11 @@ const useStyles = makeStyles({
         maxWidth: 800,
         margin: '0 auto',
     },
+    navbarButton: {
+        color: '#FFFFFF',
+        textTransform: 'initial',
+    },
+
 })
 
 export default useStyles;

@@ -1,14 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Head from 'next/head';
-import { AppBar, Toolbar, Typography, Container, Link, ThemeProvider, createTheme, CssBaseline, Switch, Badge } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Container, Link, ThemeProvider, createTheme, Menu, MenuItem,
+    CssBaseline, Switch, Badge, Button } from '@material-ui/core';
 import useStyles from '../utils/styles';
 import NextLink from 'next/link';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 export default function Layout({ title, description, children}) {
+    const router = useRouter();
     const { state, dispatch } = useContext(Store);
-    const { darkMode, cart } = state;
+    const { darkMode, cart, userInfo } = state;
     const theme = createTheme({
         typography: {
             h1: {  
@@ -20,10 +23,10 @@ export default function Layout({ title, description, children}) {
                 fontSize: '1.4rem',
                 fontWeight: 400,
                 margin: '1rem 0',
-            },
+            }, 
         },
         palette: {
-            type: darkMode ? 'dark' : 'light',
+            type: darkMode ? 'dark' : 'light', 
             primary: {
                 main: '#f0c000',
             },
@@ -37,6 +40,20 @@ export default function Layout({ title, description, children}) {
         dispatch({type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON'});
         const newDarkMode = !darkMode;
         Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
+    };
+    const [anchorEl, setAnchorEl] = useState(null);
+    const loginClickHandler = (e) => {
+        setAnchorEl(e.currentTarget);
+    };
+    const loginMenuCloseHandler = () => {
+        setAnchorEl(null)
+    };
+    const logoutClickHandler = () => {
+        setAnchorEl(null);
+        dispatch({ type: 'USER_LOGOUT' });
+        Cookies.remove('userInfo');
+        Cookies.remove('userItems');
+        router.push('/');
     };
     return (
         <div>
@@ -65,9 +82,34 @@ export default function Layout({ title, description, children}) {
                                      )}                                     
                                 </Link>
                             </NextLink>
-                            <NextLink href="/login" passHref>
-                                <Link>Login</Link>
-                            </NextLink>
+                            {userInfo ? (
+                                <> 
+                                    <Button id="basic-button"
+                                            aria-controls="basic-menu"
+                                            aria-haspopup="true"
+                                            aria-expanded={open ? 'true' : undefined}
+                                            onClick={loginClickHandler}
+                                            className={classes.navbarButton}
+                                    >
+                                        {userInfo.name}
+                                    </Button>
+                                    <Menu
+                                        id="simple-menu"
+                                        anchorEl={anchorEl}
+                                        KeepMounted
+                                        open={Boolean(anchorEl)}
+                                        onClose={loginMenuCloseHandler}                                
+                                    >
+                                        <MenuItem onClick={loginMenuCloseHandler}>Profile</MenuItem>
+                                        <MenuItem onClick={loginMenuCloseHandler}>My account</MenuItem>
+                                        <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
+                                    </Menu>
+                                </>
+                                    ) : (
+                                    <NextLink href="/login" passHref>
+                                        <Link>Login</Link>
+                                    </NextLink>
+                                    )}
                         </div>
                     </Toolbar>
                 </AppBar>
