@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 // import data from '../../utils/data';
 import Image from 'next/image'
 import Layout from '../../components/Layout';
@@ -14,21 +14,26 @@ import { Store } from '../../utils/Store';
 
 export default function productScreen(props) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { dispatch } = useContext(Store);
+    const router = useRouter();
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { state, dispatch } = useContext(Store);
     const {product} = props;
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const classes = useStyles();
     if (!product) {
         return <div>Product Not Found</div>;
-    } 
-    const addToCartHandler = async () => {
-        const { data } = await axios.get(`/api/products/${product._id}`);
-        if (data.countInStock <= 0) {
-            window.arlet('Sorry. Product is out of stock');
-            return;
-        }
-        dispatch({ type: 'CART_ADD_ITEM', payload: {...product, quantity: 1}});
     }
+    const addToCartHandler = async () => {        
+        const existItem = state.cart.cartItems.find(x=>x._id === product._id);
+        const quantity = existItem ? existItem.quantity + 1 : 1;
+        const { data } = await axios.get(`/api/products/${product._id}`);
+        if (data.countInStock < quantity) {
+            window.alert('Sorry. Product is out of stock');
+            return;
+          }
+        dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity }});
+        router.push('/cart');
+    };
     return (   
         <Layout title={product.name} description={product.description}> 
            <div className={classes.section}>
@@ -71,9 +76,9 @@ export default function productScreen(props) {
                                 </Grid>
                             </ListItem>
                             <ListItem>
-                                <Button fullWidth variant="contained" color="primary"
-                                onClick={addToCartHandler}
-                                > 
+                                <Button fullWidth variant="contained" color="primary"                                
+                                    onClick={addToCartHandler}
+                                >                                 
                                     Add to cart
                                 </Button>
                             </ListItem>

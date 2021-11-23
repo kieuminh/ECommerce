@@ -1,4 +1,4 @@
-import { ServerStyleSheets } from '@material-ui/core/styles';
+import { ServerStyleSheets } from '@material-ui/styles';
 import Document, { Head, Html, Main, NextScript } from "next/document"
 import React from 'react';
 
@@ -7,8 +7,8 @@ export default class MyDocument extends Document {
         return (
             <Html lang="en">
                 <Head>
-                    <link rel="stylesheet"
-                    href="https://fonts.googleleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+                    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;1,500&display=swap" 
+                    rel="stylesheet" />
                 </Head>
                 <body>
                     <Main />
@@ -33,6 +33,6 @@ MyDocument.getInitialProps = async (ctx) => {
         styles: [
             ...React.Children.toArray(initialProps.styles),
             sheets.getStyleElement(),
-        ]
+        ],
     };
 };

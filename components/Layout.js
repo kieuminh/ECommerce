@@ -8,7 +8,7 @@ import Cookies from 'js-cookie';
 
 export default function Layout({ title, description, children}) {
     const { state, dispatch } = useContext(Store);
-    const {darkMode, cart} = state;
+    const { darkMode, cart } = state;
     const theme = createTheme({
         typography: {
             h1: {  
@@ -34,7 +34,7 @@ export default function Layout({ title, description, children}) {
     });
     const classes = useStyles();
     const darkModeChangeHandler= () => {
-        dispatch({type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON'})
+        dispatch({type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON'});
         const newDarkMode = !darkMode;
         Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
     };
@@ -57,10 +57,12 @@ export default function Layout({ title, description, children}) {
                             <NextLink href="/cart" passHref>
                                 <Link>
                                     {cart.cartItems.length > 0 ? (
-                                        <Badge badgeContent={cart.cartItems.length}>Cart</Badge>
+                                        <Badge 
+                                            color="secondary"
+                                            badgeContent={cart.cartItems.length}>Cart</Badge>
                                      ) : (
-                                        'Cart'
-                                     )}          
+                                        "Cart"
+                                     )}                                     
                                 </Link>
                             </NextLink>
                             <NextLink href="/login" passHref>
