@@ -34,7 +34,16 @@ const useStyles = makeStyles({
         color: '#FFFFFF',
         textTransform: 'initial',
     },
-
+    transparentBackground: {
+        backgroundColor: 'transparent',
+    },
+    error: { 
+        color: '#f04040',
+    },
+    fullWidth: {
+        width: '100%',
+    },
+    
 })
 
 export default useStyles;

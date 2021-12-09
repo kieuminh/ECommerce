@@ -17,6 +17,7 @@ export default function Shipping() {
     const { redirect } = router.query;
     const { state, dispatch } = useContext(Store);
     const { userInfo, cart: { shippingAddress } } = state;
+    
     useEffect(() => {
         if (!userInfo) {
             router.push('/login?redirect=/shipping');
